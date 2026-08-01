@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 13af378bce2d88f4ea1b9dec66992326
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 261036
+  packageName: 'ProtoSprite: Rapid 2D Art'
+  packageVersion: 1.2.92
+  assetPath: Assets/ProtoSprite/Editor/Shaders/ProtoSprite_ConvertToBump.shader
+  uploadId: 909918

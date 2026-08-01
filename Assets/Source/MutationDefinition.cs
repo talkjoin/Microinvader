@@ -1,0 +1,20 @@
+// MutationDefinition.cs
+// ScriptableObject holding one mutation's data.
+// Right-click in Project → Create → MicroInvader → Mutation Definition
+
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "Mutation_New", menuName = "MicroInvader/Mutation Definition")]
+public class MutationDefinition : ScriptableObject
+{
+    public string      MutationId;
+    public string      DisplayName;
+    [TextArea]
+    public string      Description;
+    public Sprite      Icon;
+    public BiomeType   SourceBiome;
+
+    [Min(0.1f)] public float SpeedMultiplier  = 1f;
+    [Min(0.1f)] public float DamageMultiplier = 1f;
+    [Min(0)]    public int   BonusShield      = 0;
+}

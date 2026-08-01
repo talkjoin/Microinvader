@@ -1,0 +1,141 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+#pragma multi_compile __ LINEAR_SPACE
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+Texture2D<float4> hoverPixelData;
+RWTexture2D<float4> targetPixelData;
+
+int2 hoverTextureSize;
+int2 targetTextureSize;
+
+int2 startTexel;
+int2 endTexel;
+
+int4 spriteRect;
+int4 srcSpriteRect;
+
+float4 color;
+
+
+[numthreads(1,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    uint2 srcSpriteSize = uint2((uint)srcSpriteRect.z, (uint)srcSpriteRect.w);
+
+    //startTexel -= srcSpriteSize / 2;
+    //endTexel -= srcSpriteSize / 2;
+
+    //int4 spriteRect4 = new int4((int)spriteRect.xMin, (int)spriteRect.yMin, (int)spriteRect.xMax, (int)spriteRect.yMax);
+
+    int x0 = startTexel.x;
+    int x1 = endTexel.x;
+    int y0 = startTexel.y;
+    int y1 = endTexel.y;
+
+
+    int dx = abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
+    int dy = -abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
+    int err = dx + dy, e2; /* error value e_xy */
+
+
+    for (; ; )
+    {  /* loop */
+        //setPixel(x0, y0);
+        int2 pixel = int2(x0, y0);
+        //if (pixel.x >= spriteRect4.x && pixel.y >= spriteRect4.y && pixel.x < spriteRect4.z && pixel.y < spriteRect4.w)
+        {
+            for (uint i = 0; i < (uint)(srcSpriteSize.x * srcSpriteSize.y); i++)
+            {
+                int2 offset = int2(i % (uint)srcSpriteRect.z, i / (uint)srcSpriteRect.z);
+
+                int2 srcPixel = int2((int)srcSpriteRect.x, (int)srcSpriteRect.y) + offset;
+
+                int2 pixelCoord = pixel + offset;// new int2(i % targetTextureSize.x, i / targetTextureSize.x);
+
+                if (pixelCoord.x < spriteRect.x || pixelCoord.y < spriteRect.y || pixelCoord.x >= spriteRect.z || pixelCoord.y >= spriteRect.w)
+                    continue;
+
+                //int2 hoverPixel = pixelCoord - hoverTexturePosition;
+
+                //if (hoverPixel.x < 0 || hoverPixel.y < 0 || hoverPixel.x >= hoverTextureSize.x || hoverPixel.y >= hoverTextureSize.y)
+                //return;
+
+                float4 hp = hoverPixelData[srcPixel];
+
+
+                if (hp.a == 0)
+                    continue;
+
+                // Convert linear to gamma
+                #ifdef LINEAR_SPACE
+                hp = pow(abs(hp), 1.0 / 2.2);
+                #endif
+
+                hp *= color;// hoverPixel.x + hoverPixel.y * hoverTextureSize.x];
+
+                //float4 hoverValue = hp;
+
+                // Read gamma-corrected color from input Texture2D
+                //float4 gammaCorrectedColor = hoverValue;
+
+                // Convert gamma-corrected color to linear space
+                //float3 linearColor = gammaCorrectedColor.rgb * gammaCorrectedColor.a;
+
+                // Write linear color to output RWTexture2D
+                targetPixelData[pixelCoord] = hp;// pow(hoverValue, 1.0 / 2.2);// float4(linearColor, gammaCorrectedColor.a);
+
+                //targetPixelData[pixelCoord] = pow(hoverValue, 2.2);
+            }
+
+            //colors[x0 + y0 * textureSize.x] = paintColor;
+        }
+
+        if (x0 == x1 && y0 == y1) break;
+        e2 = 2 * err;
+        if (e2 >= dy) { err += dy; x0 += sx; } /* e_xy+e_x > 0 */
+        if (e2 <= dx) { err += dx; y0 += sy; } /* e_xy+e_y < 0 */
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+    int x0 = startPixel.x;
+    int x1 = endPixel.x;
+    int y0 = startPixel.y;
+    int y1 = endPixel.y;
+
+
+    int dx = abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
+    int dy = -abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
+    int err = dx + dy, e2;
+
+    //int offset = floor(brushSize * 0.5);
+
+    for (; ; )
+    {
+        int2 pixel = int2(x0, y0);
+        // Check texel is within sprite rect bounds
+        if (pixel.x >= spriteRect.x && pixel.y >= spriteRect.y && pixel.x < spriteRect.z && pixel.y < spriteRect.w)
+        {
+            Result[pixel] = paintColor;
+        }
+
+        if (x0 == x1 && y0 == y1) break;
+        e2 = 2 * err;
+        if (e2 >= dy) { err += dy; x0 += sx; } 
+        if (e2 <= dx) { err += dx; y0 += sy; } 
+    }*/
+}
