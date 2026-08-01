@@ -21,13 +21,14 @@ public class ToxinProjectile : MonoBehaviour
         _damageMult = damageMult;
         _start      = transform.position;
         _launched   = true;
-        float angle = Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        //float angle = Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg;
+        //transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 
     void Update()
     {
         if (!_launched) return;
+        Debug.Log("Launched!");
         transform.position += _dir * Speed * Time.deltaTime;
         if (Vector3.Distance(transform.position, _start) >= MaxRange)
             Destroy(gameObject);

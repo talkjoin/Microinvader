@@ -76,7 +76,14 @@ public class BacteriumController : MonoBehaviour
 
     public void OnDash(InputValue v)  { if (v.isPressed) TryDash(); }
 
-    public void OnFire(InputValue v)  { if (v.isPressed) TryShoot(); }
+    public void OnShootLeft(InputValue v)  { if (v.isPressed) TryShoot(-transform.right); }
+
+    public void OnShootRight(InputValue v) { if (v.isPressed) TryShoot(transform.right); }
+
+    public void OnShootUp(InputValue v) { if (v.isPressed) TryShoot(transform.up); }
+
+    public void OnShootDown(InputValue v) { if (v.isPressed) TryShoot(-transform.up); }
+
 
     // ── Movement ──────────────────────────────────────────────────────────
     void Move()
@@ -84,12 +91,12 @@ public class BacteriumController : MonoBehaviour
         Vector2 target = _moveInput * MoveSpeed * _speedMult;
         _rb.linearVelocity = Vector2.SmoothDamp(_rb.linearVelocity, target,
                                            ref _smoothVel, AccelerationTime);
-        _anim.SetFloat("Speed", _rb.linearVelocity.magnitude);
+        //_anim.SetFloat("Speed", _rb.linearVelocity.magnitude);
 
         if (_moveInput.sqrMagnitude > 0.01f)
         {
             float angle = Mathf.Atan2(_moveInput.y, _moveInput.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            //transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         }
     }
 
@@ -114,15 +121,15 @@ public class BacteriumController : MonoBehaviour
     }
 
     // ── Shooting ──────────────────────────────────────────────────────────
-    void TryShoot()
+    void TryShoot(Vector3 dir)
     {
+
         if (_shotTimer > 0f || ToxinPrefab == null) return;
-        Vector3 origin = ProjectileOrigin != null
-            ? ProjectileOrigin.position : transform.position;
-        Vector3 dir = AimDirection();
+        Vector3 origin = ProjectileOrigin != null ? ProjectileOrigin.position : transform.position;
+        //Vector3 dir = AimDirection();
         var p = Instantiate(ToxinPrefab, origin, Quaternion.identity);
         p.GetComponent<ToxinProjectile>()?.Launch(dir, _damageMult);
-        _shotTimer = ShotCooldown;
+        _shotTimer = ShotCooldown;        
     }
 
     Vector3 AimDirection()
