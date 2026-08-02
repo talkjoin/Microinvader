@@ -158,7 +158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68737578d853ac64fa859d9609838953, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BacteriumController
-  MoveSpeed: 2
+  MoveSpeed: 3
   AccelerationTime: 0.08
   DashSpeed: 18
   DashDuration: 0.12
@@ -166,7 +166,7 @@ MonoBehaviour:
   ToxinPrefab: {fileID: 8434501206355493906, guid: c05b27ee2706bca43a9b09fe34b7020f, type: 3}
   ProjectileOrigin: {fileID: 0}
   ShotCooldown: 0.5
-  MaxHealth: 5
+  MaxHealth: 20
   MaxShield: 3
   IFrameTime: 0.6
   SR: {fileID: 3488905678860818546}
