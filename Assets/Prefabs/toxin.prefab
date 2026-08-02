@@ -170,8 +170,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ac378463280ea8448219c222710d313, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ToxinProjectile
-  Speed: 12
-  MaxRange: 10
+  Speed: 2
+  MaxRange: 2
   BaseDamage: 1
   EnemyLayer:
     serializedVersion: 2

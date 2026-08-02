@@ -32,7 +32,7 @@ public class ToxinProjectile : MonoBehaviour
         if (Vector3.Distance(transform.position, _start) >= MaxRange)
             Destroy(gameObject);
     }
-
+    
     void OnTriggerEnter2D(Collider2D other)
     {
         if (((1 << other.gameObject.layer) & WallLayer) != 0)
@@ -47,4 +47,5 @@ public class ToxinProjectile : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
 }

@@ -214,8 +214,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a528bab6bf29e34d86503db58772787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AntibodyProjectile
-  Speed: 7
-  MaxRange: 8
+  Speed: 5
+  MaxRange: 5
   PlayerLayer:
     serializedVersion: 2
     m_Bits: 1024

@@ -158,18 +158,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68737578d853ac64fa859d9609838953, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BacteriumController
-  MoveSpeed: 5
+  MoveSpeed: 2
   AccelerationTime: 0.08
   DashSpeed: 18
   DashDuration: 0.12
   DashCooldown: 0.8
   ToxinPrefab: {fileID: 8434501206355493906, guid: c05b27ee2706bca43a9b09fe34b7020f, type: 3}
   ProjectileOrigin: {fileID: 0}
-  ShotCooldown: 0.35
+  ShotCooldown: 0.5
   MaxHealth: 5
   MaxShield: 3
   IFrameTime: 0.6
-  SR: {fileID: 0}
+  SR: {fileID: 3488905678860818546}
   HitColor: {r: 1, g: 0, b: 0, a: 1}
   FlashTime: 0.1
 --- !u!114 &2226335013138734153
@@ -232,7 +232,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0

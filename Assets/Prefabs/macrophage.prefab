@@ -71,7 +71,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96f17825ec01bf48b9bfc10e363ba8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  MaxHealth: 3
+  MaxHealth: 10
   SR: {fileID: 0}
   HitColor: {r: 1, g: 0, b: 0, a: 1}
   FlashTime: 0.1
@@ -196,7 +196,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -217,10 +217,10 @@ MonoBehaviour:
   DetectionRadius: 6
   LoseAggroRadius: 10
   PatrolSpeed: 1.5
-  ChaseSpeed: 2
+  ChaseSpeed: 3
   AttackRange: 1.2
   AttackCooldown: 1.5
-  AttackDamage: 1
+  AttackDamage: 2
   PathRefreshRate: 0.4
   SlamRadius: 1.5
   SlamKnockback: 4
