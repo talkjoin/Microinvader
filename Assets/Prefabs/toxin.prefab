@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8974145446543841378}
   - component: {fileID: 7133889239917192637}
   - component: {fileID: 3367800178752356580}
-  m_Layer: 11
+  m_Layer: 15
   m_Name: toxin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -152,7 +152,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -175,7 +175,7 @@ MonoBehaviour:
   BaseDamage: 1
   EnemyLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2048
   WallLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 73728

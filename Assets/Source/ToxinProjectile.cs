@@ -28,7 +28,6 @@ public class ToxinProjectile : MonoBehaviour
     void Update()
     {
         if (!_launched) return;
-        Debug.Log("Launched!");
         transform.position += _dir * Speed * Time.deltaTime;
         if (Vector3.Distance(transform.position, _start) >= MaxRange)
             Destroy(gameObject);

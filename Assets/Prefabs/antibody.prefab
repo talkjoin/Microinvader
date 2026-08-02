@@ -10,13 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 8895918235607658115}
   - component: {fileID: 3401232291070674847}
-  - component: {fileID: 6180610783522764943}
-  - component: {fileID: 6162930383671472728}
   - component: {fileID: 8974145446543841378}
   - component: {fileID: 7133889239917192637}
-  - component: {fileID: -8305304148891279447}
-  m_Layer: 11
-  m_Name: b_cell
+  - component: {fileID: 1931683794724262667}
+  - component: {fileID: 2142674488185892780}
+  - component: {fileID: -8336287152253333820}
+  m_Layer: 12
+  m_Name: antibody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -86,7 +86,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 200
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: ff8e86169605a844a92aaa4d08e791d3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fe684a61b4f03f64892822f986b0ebf0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -97,48 +97,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
---- !u!95 &6180610783522764943
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8434501206355493906}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: f0adcaced76b0a84384d4bd7717e2926, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6162930383671472728
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8434501206355493906}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f96f17825ec01bf48b9bfc10e363ba8d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  MaxHealth: 3
-  SR: {fileID: 0}
-  HitColor: {r: 1, g: 0, b: 0, a: 1}
-  FlashTime: 0.1
-  DeathVFX: {fileID: 0}
-  DeathDelay: 0.4
-  DropPrefab: {fileID: 0}
-  DropChance: 0.2
 --- !u!50 &8974145446543841378
 Rigidbody2D:
   serializedVersion: 5
@@ -202,7 +160,29 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.3
---- !u!114 &-8305304148891279447
+--- !u!95 &1931683794724262667
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8434501206355493906}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2142674488185892780
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -211,18 +191,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 8434501206355493906}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 018670da06738144b8bfb93aca2ee59d, type: 3}
+  m_Script: {fileID: 11500000, guid: f96f17825ec01bf48b9bfc10e363ba8d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AntibodyAI
-  DetectionRadius: 6
-  LoseAggroRadius: 10
-  PatrolSpeed: 1.5
-  ChaseSpeed: 3.5
-  AttackRange: 1.2
-  AttackCooldown: 1.5
-  AttackDamage: 1
-  PathRefreshRate: 0.4
-  ProjectilePrefab: {fileID: 8434501206355493906, guid: 39620a43df4bacf4695ee4021bc47565, type: 3}
-  BurstCount: 3
-  BurstInterval: 0.15
-  SpreadAngle: 10
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  MaxHealth: 3
+  SR: {fileID: 0}
+  HitColor: {r: 1, g: 0, b: 0, a: 1}
+  FlashTime: 0.1
+  DeathVFX: {fileID: 0}
+  DeathDelay: 0.4
+  DropPrefab: {fileID: 0}
+  DropChance: 0.2
+--- !u!114 &-8336287152253333820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8434501206355493906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a528bab6bf29e34d86503db58772787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AntibodyProjectile
+  Speed: 7
+  MaxRange: 8
+  PlayerLayer:
+    serializedVersion: 2
+    m_Bits: 1024

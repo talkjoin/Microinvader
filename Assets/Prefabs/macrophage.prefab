@@ -14,9 +14,10 @@ GameObject:
   - component: {fileID: 5767189764662825672}
   - component: {fileID: 3132288396607968971}
   - component: {fileID: 7210641870647099275}
+  - component: {fileID: 4862207017472540776}
   m_Layer: 11
   m_Name: macrophage
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -46,7 +47,7 @@ Animator:
   m_GameObject: {fileID: 2143367802940974601}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 78b124bcd5624b143a23212ae562b916, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -154,7 +155,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 200
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 6855ba3588a21c442b8cd27f1a4634f4, type: 3}
+  m_Sprite: {fileID: 1137318996, guid: 6855ba3588a21c442b8cd27f1a4634f4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -195,9 +196,31 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
+--- !u!114 &4862207017472540776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2143367802940974601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70544dfcc58413b4b9da7826095df04f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MacrophageAI
+  DetectionRadius: 6
+  LoseAggroRadius: 10
+  PatrolSpeed: 1.5
+  ChaseSpeed: 2
+  AttackRange: 1.2
+  AttackCooldown: 1.5
+  AttackDamage: 1
+  PathRefreshRate: 0.4
+  SlamRadius: 1.5
+  SlamKnockback: 4

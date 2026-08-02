@@ -31,11 +31,17 @@ public class BacteriumController : MonoBehaviour
     public int   MaxShield  = 3;
     public float IFrameTime = 0.6f;
 
+    [Header("Hit Flash")]
+    public SpriteRenderer SR;
+    public Color HitColor = Color.red;
+    public float FlashTime = 0.1f;
+
     // ── Runtime ───────────────────────────────────────────────────────────
     Rigidbody2D _rb;
     Animator    _anim;
     Vector2     _moveInput;
     Vector2     _smoothVel;
+    Color       _orig;
 
     int   _health, _shield;
     bool  _dashing, _invincible;
@@ -57,6 +63,8 @@ public class BacteriumController : MonoBehaviour
         _anim   = GetComponent<Animator>();
         _health = MaxHealth;
         _shield = MaxShield;
+        if (SR == null) SR = GetComponent<SpriteRenderer>();
+        if (SR != null) _orig = SR.color;
     }
 
     void Update()
@@ -156,6 +164,7 @@ public class BacteriumController : MonoBehaviour
         {
             _health = Mathf.Max(0, _health - amount);
             OnHealthChanged?.Invoke(_health, MaxHealth);
+            StartCoroutine(Flash());
         }
         if (_health <= 0) { Die(); return; }
         StartCoroutine(IFrameRoutine());
@@ -166,6 +175,14 @@ public class BacteriumController : MonoBehaviour
         _invincible = true;
         yield return new WaitForSeconds(IFrameTime);
         _invincible = false;
+    }
+
+    IEnumerator Flash()
+    {
+        if (SR == null) yield break;
+        SR.color = HitColor;
+        yield return new WaitForSeconds(FlashTime);
+        SR.color = _orig;
     }
 
     void Die()
