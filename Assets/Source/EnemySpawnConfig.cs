@@ -1,4 +1,3 @@
-// EnemySpawnConfig.cs
 // Serialisable data class used by DungeonManager's inspector array.
 
 using UnityEngine;

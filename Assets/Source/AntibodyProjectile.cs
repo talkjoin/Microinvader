@@ -1,5 +1,4 @@
-// AntibodyProjectile.cs
-// Projectile fired by AntibodyAI.
+// projectile fired by AntibodyAI.
 
 using UnityEngine;
 

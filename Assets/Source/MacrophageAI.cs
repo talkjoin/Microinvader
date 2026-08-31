@@ -1,6 +1,4 @@
-// MacrophageAI.cs
-// Slow, tanky melee attacker. Area slam with knockback.
-// Attach to Macrophage prefab alongside EnemyHealth.
+// slow melee attacker. Area slam with knockback.
 
 using UnityEngine;
 

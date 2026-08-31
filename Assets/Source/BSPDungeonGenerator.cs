@@ -1,6 +1,4 @@
-// BSPDungeonGenerator.cs
-// Pure C# class (not a MonoBehaviour).
-// Call Generate(seed) to get a bool[,] tile grid.
+// call Generate(seed) to get a bool[,] tile grid.
 // true = floor, false = wall.
 
 using System.Collections.Generic;

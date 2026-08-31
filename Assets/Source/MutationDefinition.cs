@@ -1,6 +1,4 @@
-// MutationDefinition.cs
-// ScriptableObject holding one mutation's data.
-// Right-click in Project → Create → MicroInvader → Mutation Definition
+// ScriptableObject MicroInvader ->Mutation Definition
 
 using UnityEngine;
 

@@ -1,7 +1,5 @@
-// EnemyBaseAI.cs
-// Abstract FSM base class for all MicroInvader enemies.
-// States: Patrol → Chase → Attack
-// Subclasses implement ExecuteAttack().
+// Abstract FSM base class for all NPC
+// States: Patrol-> Chase-> Attack
 
 using System.Collections;
 using System.Collections.Generic;

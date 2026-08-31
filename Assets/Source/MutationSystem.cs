@@ -1,5 +1,4 @@
-// MutationSystem.cs
-// Singleton. Persists across scenes. Manages mutation unlocks between runs.
+// Singleton manages mutation unlocks between runs.
 // Place on a persistent GameObject (DontDestroyOnLoad).
 
 using System.Collections.Generic;

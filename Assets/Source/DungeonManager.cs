@@ -1,6 +1,4 @@
-// DungeonManager.cs
-// Top-level orchestrator. Attach to your scene's Grid GameObject.
-// Generates dungeon, renders tiles, spawns player + enemies + exit.
+// attach to a GameObject with Grid.
 
 using System.Collections.Generic;
 using UnityEngine;
@@ -36,7 +34,7 @@ public class DungeonManager : MonoBehaviour
 
     public void GenerateDungeon(int seed)
     {
-        // Step 1 – Generate
+        // step1 : generate
         var gen = new BSPDungeonGenerator(
             MapWidth, MapHeight, MinRoomSize, MaxDepth,
             corridorWidth: 2, caIterations: 3, caThreshold: 4);
@@ -45,10 +43,10 @@ public class DungeonManager : MonoBehaviour
 
         if (rooms.Count == 0) { Debug.LogError("No rooms generated!"); return; }
 
-        // Step 2 – Render
+        // step2 : render
         if (Renderer != null) Renderer.Render(Tiles, CurrentBiome);
 
-        // Step 3 – Spawn player in first room
+        // step 3: spawn player in first room
         SpawnRoom = rooms[0];
         SpawnPlayer(SpawnRoom, RoomCenter(SpawnRoom));
 
@@ -62,15 +60,15 @@ public class DungeonManager : MonoBehaviour
 
 
 
-        // Step 4 – Populate remaining rooms
+        // step 4 : populate remaining rooms
         for (int i = 1; i < rooms.Count; i++)
             PopulateRoom(rooms[i], i);
 
-        // Step 5 – Exit portal in last room
+        // step 5 : exit portal in last room
         if (ExitPortalPrefab != null)
             Instantiate(ExitPortalPrefab, RoomCenter(rooms[rooms.Count - 1]), Quaternion.identity);
 
-        Debug.Log($"Dungeon ready — {rooms.Count} rooms, floor {FloorDepth}, biome {CurrentBiome}");
+        Debug.Log($"Dungeon ready {rooms.Count} rooms, floor {FloorDepth}, biome {CurrentBiome}");
     }
 
     void PopulateRoom(RectInt room, int index)

@@ -1,5 +1,5 @@
 // ToxinProjectile.cs
-// Fired by BacteriumController. Travels straight, deals damage on enemy hit.
+// fired by BacteriumController. Travels straight, deals damage on enemy hit.
 
 using UnityEngine;
 

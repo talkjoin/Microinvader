@@ -1,8 +1,5 @@
-// BacteriumController.cs
 // Player bacterium movement, dash, shooting, and health.
-// Requires: Rigidbody2D, Animator
-// Uses Unity's new Input System. If you use the old Input System,
-// replace OnMove/OnDash/OnFire with Input.GetAxis calls in Update().
+
 
 using System.Collections;
 using UnityEngine;
@@ -36,7 +33,6 @@ public class BacteriumController : MonoBehaviour
     public Color HitColor = Color.red;
     public float FlashTime = 0.1f;
 
-    // ── Runtime ───────────────────────────────────────────────────────────
     Rigidbody2D _rb;
     Animator    _anim;
     Vector2     _moveInput;
@@ -78,8 +74,7 @@ public class BacteriumController : MonoBehaviour
         if (!_dashing) Move();
     }
 
-    // ── Input System callbacks ────────────────────────────────────────────
-    // These are called automatically by a PlayerInput component.
+    // called automatically by a PlayerInput component.
     public void OnMove(InputValue v) => _moveInput = v.Get<Vector2>();
 
     public void OnDash(InputValue v)  { if (v.isPressed) TryDash(); }
@@ -93,7 +88,7 @@ public class BacteriumController : MonoBehaviour
     public void OnShootDown(InputValue v) { if (v.isPressed) TryShoot(-transform.up); }
 
 
-    // ── Movement ──────────────────────────────────────────────────────────
+    // movement stuff
     void Move()
     {
         Vector2 target = _moveInput * MoveSpeed * _speedMult;
@@ -108,7 +103,7 @@ public class BacteriumController : MonoBehaviour
         }
     }
 
-    // ── Dash ──────────────────────────────────────────────────────────────
+    // dashing 
     void TryDash()
     {
         if (_dashing || _dashTimer > 0f || _moveInput == Vector2.zero) return;
@@ -128,7 +123,7 @@ public class BacteriumController : MonoBehaviour
         _invincible = false;
     }
 
-    // ── Shooting ──────────────────────────────────────────────────────────
+    // shooting
     void TryShoot(Vector3 dir)
     {
 
@@ -151,7 +146,7 @@ public class BacteriumController : MonoBehaviour
         return transform.right;
     }
 
-    // ── Damage ────────────────────────────────────────────────────────────
+    // Damage related stuff
     public void TakeDamage(int amount)
     {
         if (_invincible || !IsAlive) return;
@@ -193,7 +188,7 @@ public class BacteriumController : MonoBehaviour
         OnDied?.Invoke();
     }
 
-    // Called by MutationSystem at run start
+    // called by MutationSystem at run start
     public void ApplyMutations(float speedMult, float damageMult, int bonusShield)
     {
         _speedMult  = speedMult;

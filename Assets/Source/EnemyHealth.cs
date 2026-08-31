@@ -1,5 +1,4 @@
-// EnemyHealth.cs
-// Attach to every enemy prefab alongside its AI script.
+// All npc need this one each
 
 using System.Collections;
 using UnityEngine;

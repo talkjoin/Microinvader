@@ -1,3 +1,5 @@
+//script fort the protal
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,11 +21,11 @@ public class ExitPortal : MonoBehaviour
 
         _activated = true;
 
-        // Spawn a little burst effect
+        // spawn a little burst effect
         if (ActivatedVFXPrefab != null)
             Instantiate(ActivatedVFXPrefab, transform.position, Quaternion.identity);
 
-        // Tell DungeonManager to generate the next floor
+        // tell DungeonManager to generate the next floor
         var dm = FindFirstObjectByType<DungeonManager>();
         if (dm != null)
         {

@@ -1,6 +1,6 @@
-// AStarPathfinder.cs
+
 // Static A* pathfinder on a bool[,] tile grid.
-// Returns a List<Vector2Int> of waypoints from start to goal.
+// returns a List<Vector2Int> of waypoints from start to goal.
 
 using System.Collections.Generic;
 using UnityEngine;
