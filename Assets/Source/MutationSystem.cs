@@ -49,6 +49,23 @@ public class MutationSystem : MonoBehaviour
 
     public void ResetAll() { _active.Clear(); PlayerPrefs.DeleteKey("MI_Mutations"); }
 
+    // Read-only view of everything currently unlocked.
+    public IReadOnlyList<MutationDefinition> ActiveMutations => _active;
+
+    public bool IsActive(MutationDefinition m) => m != null && _active.Contains(m);
+
+    // Every mutation the player doesn't already own - used by the portal shop.
+    public List<MutationDefinition> GetPurchasableMutations()
+    {
+        var list = new List<MutationDefinition>();
+        foreach (var m in AllMutations)
+            if (m != null && !_active.Contains(m)) list.Add(m);
+        return list;
+    }
+
+    // 3 random not-yet-owned mutations, offered for free after a death-continue.
+    public MutationDefinition[] GetRandomFreeChoices(int n) => Pick(GetPurchasableMutations().ToArray(), n);
+
     MutationDefinition[] FilterByBiome(BiomeType b)
     {
         var out_ = new List<MutationDefinition>();

@@ -1,14 +1,9 @@
 //script fort the protal
 
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class ExitPortal : MonoBehaviour
 {
-    [Header("Next Floor")]
-    public BiomeType NextBiome = BiomeType.Bloodstream;
-    public int NextFloorDepth = 2;
-
     [Header("Visual Feedback")]
     public GameObject ActivatedVFXPrefab;
 
@@ -25,13 +20,9 @@ public class ExitPortal : MonoBehaviour
         if (ActivatedVFXPrefab != null)
             Instantiate(ActivatedVFXPrefab, transform.position, Quaternion.identity);
 
-        // tell DungeonManager to generate the next floor
-        var dm = FindFirstObjectByType<DungeonManager>();
-        if (dm != null)
-        {
-            dm.FloorDepth = NextFloorDepth;
-            dm.CurrentBiome = NextBiome;
-            dm.GenerateDungeon(Random.Range(0, int.MaxValue));
-        }
+        // Hand off to GameManager: it owns the biome order/progression now and
+        // will show either the portal shop screen or the victory screen
+        // depending on whether this was the last biome.
+        GameManager.Instance?.OnPortalEntered();
     }
 }

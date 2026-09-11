@@ -23,11 +23,21 @@ public class EnemyHealth : MonoBehaviour
     [Range(0f,1f)]
     public float DropChance = 0.2f;
 
+    [Header("Reward")]
+    [Tooltip("Mutation points granted to the player when this enemy dies.")]
+    [Min(0)]
+    public int MutationPointReward = 1;
+
     int  _hp;
     bool _dead;
     Color _orig;
 
-    public event System.Action OnDied;
+    // Per-instance death event (kept for any local listeners).
+    public event System.Action<int> OnDied;
+    // Global death event - GameManager subscribes to this once, rather than
+    // hooking every individually spawned enemy, to track mutation points.
+    public static event System.Action<int> OnAnyEnemyDied;
+
     public bool IsAlive => !_dead;
 
     void Awake()
@@ -64,7 +74,8 @@ public class EnemyHealth : MonoBehaviour
         yield return new WaitForSeconds(DeathDelay);
         if (DropPrefab && Random.value <= DropChance)
             Instantiate(DropPrefab, transform.position, Quaternion.identity);
-        OnDied?.Invoke();
+        OnDied?.Invoke(MutationPointReward);
+        OnAnyEnemyDied?.Invoke(MutationPointReward);
         Destroy(gameObject);
     }
 }

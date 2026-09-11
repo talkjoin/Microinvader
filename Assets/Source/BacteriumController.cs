@@ -53,6 +53,11 @@ public class BacteriumController : MonoBehaviour
 
     public bool IsAlive => _health > 0;
 
+    // Exposed so the HUD can read the starting values right after spawn
+    // (OnHealthChanged/OnShieldChanged only fire on *change*, not on subscribe).
+    public int CurrentHealth => _health;
+    public int CurrentShield => _shield;
+
     void Awake()
     {
         _rb     = GetComponent<Rigidbody2D>();
@@ -163,6 +168,15 @@ public class BacteriumController : MonoBehaviour
         }
         if (_health <= 0) { Die(); return; }
         StartCoroutine(IFrameRoutine());
+    }
+
+    // Used by GameManager's Assist Mode regen tick (and available for any
+    // future healing pickup/mutation).
+    public void Heal(int amount)
+    {
+        if (!IsAlive || amount <= 0) return;
+        _health = Mathf.Min(MaxHealth, _health + amount);
+        OnHealthChanged?.Invoke(_health, MaxHealth);
     }
 
     IEnumerator IFrameRoutine()

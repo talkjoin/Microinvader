@@ -15,4 +15,8 @@ public class MutationDefinition : ScriptableObject
     [Min(0.1f)] public float SpeedMultiplier  = 1f;
     [Min(0.1f)] public float DamageMultiplier = 1f;
     [Min(0)]    public int   BonusShield      = 0;
+
+    [Header("Shop")]
+    [Tooltip("Mutation points required to purchase this at the portal shop.")]
+    [Min(0)]    public int   Cost             = 10;
 }
