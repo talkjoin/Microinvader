@@ -11,6 +11,8 @@ public class ExitPortal : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log($"Portal triggered by: {other.name}, tag: {other.tag}");
+
         if (_activated) return;
         if (!other.CompareTag("Player")) return;
 

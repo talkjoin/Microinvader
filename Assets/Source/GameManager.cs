@@ -1,19 +1,3 @@
-// GameManager.cs
-// Central orchestrator for the whole game: UI screen flow, biome progression,
-// mutation points, and the player's health/shield HUD.
-//
-// Attach to a persistent GameObject in the boot scene. Wire up all the
-// [Header] fields in the Inspector (panels, buttons, sliders, text fields).
-//
-// Flow:
-//   StartScreen --(Start New Game / Start Assist Mode)--> Hint --> Playing
-//   Playing --(player dies)--> DeathScreen --(Continue)--> FreeMutationPick --> Hint --> Playing (biome 1)
-//   Playing --(portal, not last biome)--> ShopScreen --(Next Stage)--> Hint --> Playing (next biome)
-//   Playing --(portal, last biome)--> VictoryScreen
-//
-// Assumes TextMeshPro (TMP_Text). Swap for UnityEngine.UI.Text if your
-// project doesn't use TMP.
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,7 +9,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    // ── Biome progression ───────────────────────────────────────────────
+    // Biome progression
     [Header("Biome Order")]
     [Tooltip("The order biomes are played in. The player always starts at index 0.")]
     public BiomeType[] BiomeOrder =
@@ -37,26 +21,27 @@ public class GameManager : MonoBehaviour
     bool _assistMode;
     int  _mutationPoints;
 
-    // ── References ──────────────────────────────────────────────────────
-    [Header("References")]
+    // Dungeon Manager
+    [Header("Dungeon Maker")]
     public DungeonManager Dungeon;
 
     BacteriumController _player;
 
-    // ── HUD (shown while playing) ───────────────────────────────────────
+    // HUD
     [Header("HUD")]
     public GameObject HUDPanel;
     public Slider     HealthBarSlider;
     public Slider     ShieldBarSlider;
     public TMP_Text   MutationPointsText;
+    public Image      ScreenBackgroundImage;
 
-    // ── Start screen ─────────────────────────────────────────────────────
+    // Start screen
     [Header("Start Screen")]
     public GameObject StartPanel;
     public Button     StartNewGameButton;
     public Button     StartAssistModeButton;
 
-    // ── Death / continue screen ─────────────────────────────────────────
+    // Death/continue screen
     [Header("Death Screen")]
     public GameObject DeathPanel;
     public Button     ContinueButton;
@@ -65,19 +50,19 @@ public class GameManager : MonoBehaviour
     public GameObject FreeMutationPanel;
     public Transform  FreeMutationCardContainer;
 
-    // ── Portal shop screen ───────────────────────────────────────────────
+    // Portal shop screen
     [Header("Portal Shop Screen")]
     public GameObject ShopPanel;
     public Transform  ShopCardContainer;
     public TMP_Text   ShopMutationPointsText;
     public Button     NextStageButton;
 
-    // ── Victory screen ──────────────────────────────────────────────────
+    // Victory screen
     [Header("Victory Screen")]
     public GameObject VictoryPanel;
     public Button     PlayAgainButton; // optional
 
-    // ── Hint / education screen ─────────────────────────────────────────
+    // Hint/education screen
     [Header("Hint Screen")]
     public GameObject   HintPanel;
     public Image        HintImage;
@@ -98,7 +83,7 @@ public class GameManager : MonoBehaviour
     Coroutine _assistRoutine;
     Action    _afterHint;
 
-    // ── Lifecycle ────────────────────────────────────────────────────────
+    // Lifecycle
     void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
@@ -109,7 +94,7 @@ public class GameManager : MonoBehaviour
         ContinueButton?.onClick.AddListener(OnContinueClicked);
         NextStageButton?.onClick.AddListener(OnNextStageClicked);
         HintSkipButton?.onClick.AddListener(OnHintSkipClicked);
-        PlayAgainButton?.onClick.AddListener(BeginNewRun);
+        PlayAgainButton?.onClick.AddListener(StartFreshRun);
 
         EnemyHealth.OnAnyEnemyDied += AddMutationPoints;
     }
@@ -126,14 +111,22 @@ public class GameManager : MonoBehaviour
         ShowOnly(StartPanel);
     }
 
-    // ── Start screen ─────────────────────────────────────────────────────
+    // Start screen
     void OnStartClicked(bool assistMode)
     {
         _assistMode = assistMode;
+        StartFreshRun();
+    }
+
+    // A completely clean playthrough: no mutations carried over from any previous run
+
+    void StartFreshRun()
+    {
+        MutationSystem.Instance?.ResetAll();
         BeginNewRun();
     }
 
-    // Also used to restart after death-continue and from the victory screen's Play Again.
+    // Resets biome progress and run-scoped currency and moves to the hint screen
     void BeginNewRun()
     {
         _biomeIndex     = 0;
@@ -142,7 +135,7 @@ public class GameManager : MonoBehaviour
         ShowHintThen(() => StartBiome(_biomeIndex));
     }
 
-    // ── Biome / floor flow ───────────────────────────────────────────────
+    //Biome/floor
     void StartBiome(int index)
     {
         ShowOnly(HUDPanel);
@@ -179,18 +172,13 @@ public class GameManager : MonoBehaviour
         _player.OnShieldChanged += UpdateShieldBar;
         _player.OnDied          += OnPlayerDied;
 
-        // Prime the HUD immediately (events only fire on change, not on subscribe).
         UpdateHealthBar(_player.CurrentHealth, _player.MaxHealth);
         UpdateShieldBar(_player.CurrentShield, _player.MaxShield);
 
-        // Apply every mutation unlocked so far to this fresh player instance.
-        // NOTE: call this exactly once per spawn - it's safe here because each
-        // floor spawns a brand-new BacteriumController (see DungeonManager.SpawnPlayer),
-        // so MaxShield always starts from its prefab default before mutations stack.
         if (MutationSystem.Instance != null) MutationSystem.Instance.ApplyToPlayer(_player);
     }
 
-    // ── Assist mode ──────────────────────────────────────────────────────
+    // Assist mode
     void StartAssistRegen()
     {
         StopAssistRegen();
@@ -212,7 +200,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // ── HUD updates ──────────────────────────────────────────────────────
+    // HUD
     void UpdateHealthBar(int current, int max)
     {
         if (HealthBarSlider == null) return;
@@ -239,7 +227,7 @@ public class GameManager : MonoBehaviour
         if (ShopMutationPointsText != null) ShopMutationPointsText.text = $"Mutation Points: {_mutationPoints}";
     }
 
-    // ── Death / continue flow ───────────────────────────────────────────
+    // Death/continue flow
     void OnPlayerDied()
     {
         StopAssistRegen();
@@ -251,7 +239,7 @@ public class GameManager : MonoBehaviour
         if (MutationSystem.Instance == null)
         {
             Debug.LogWarning("GameManager: MutationSystem.Instance is missing from the scene.");
-            BeginNewRun();
+            StartFreshRun();
             return;
         }
 
@@ -265,11 +253,18 @@ public class GameManager : MonoBehaviour
 
     void OnFreeMutationPicked(MutationDefinition chosen)
     {
+        // Wipe everything accumulated during the run that just ended
+        MutationSystem.Instance.ResetAll();
         MutationSystem.Instance.SelectMutation(chosen);
         BeginNewRun();
     }
 
-    // ── Portal / shop flow ───────────────────────────────────────────────
+    // Portal/shop flow
+    [Tooltip("How many random mutation cards the portal shop offers per visit.")]
+    public int ShopOfferCount = 3;
+
+    readonly List<MutationDefinition> _shopOffers = new List<MutationDefinition>();
+
     // Called by ExitPortal when the player reaches the exit.
     public void OnPortalEntered()
     {
@@ -280,21 +275,22 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        RollShopOffers();
         ShowOnly(ShopPanel);
         RefreshShop();
+    }
+
+    void RollShopOffers()
+    {
+        _shopOffers.Clear();
+        if (MutationSystem.Instance == null) return;
+        _shopOffers.AddRange(MutationSystem.Instance.GetRandomFreeChoices(ShopOfferCount));
     }
 
     void RefreshShop()
     {
         UpdateMutationPointsUI();
-
-        if (MutationSystem.Instance == null) return;
-
-        PopulateMutationCards(
-            ShopCardContainer,
-            MutationSystem.Instance.GetPurchasableMutations(),
-            free: false,
-            onPicked: OnMutationPurchased);
+        PopulateMutationCards(ShopCardContainer, _shopOffers, free: false, onPicked: OnMutationPurchased);
     }
 
     void OnMutationPurchased(MutationDefinition def)
@@ -303,7 +299,8 @@ public class GameManager : MonoBehaviour
 
         _mutationPoints -= def.Cost;
         MutationSystem.Instance.SelectMutation(def);
-        RefreshShop(); // re-draw so the purchased mutation disappears and points update
+        _shopOffers.Remove(def); // just this card disappears; the other offers stay put
+        RefreshShop();
     }
 
     void OnNextStageClicked()
@@ -312,7 +309,7 @@ public class GameManager : MonoBehaviour
         ShowHintThen(() => StartBiome(_biomeIndex));
     }
 
-    // ── Mutation card list helper (shared by free-pick and shop screens) ─
+    // Mutation card list helper (shared by free-pick and shop screens)
     void PopulateMutationCards(Transform container, IReadOnlyList<MutationDefinition> options, bool free, Action<MutationDefinition> onPicked)
     {
         if (container == null || MutationCardPrefab == null) return;
@@ -331,7 +328,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // ── Hint / education screen ─────────────────────────────────────────
+    // Hint / education screen
     void ShowHintThen(Action after)
     {
         _afterHint = after;
@@ -339,7 +336,7 @@ public class GameManager : MonoBehaviour
 
         if (ImmuneFacts != null && ImmuneFacts.Length > 0)
         {
-            var fact = ImmuneFacts[UnityEngine.Random.Range(0, ImmuneFacts.Length)];
+            var fact = ImmuneFacts[_biomeIndex == 0? 0: UnityEngine.Random.Range(0, ImmuneFacts.Length)];
             if (HintTitleText != null) HintTitleText.text = fact.Title;
             if (HintBodyText  != null) HintBodyText.text  = fact.FactText;
             if (HintImage     != null) HintImage.sprite   = fact.Image;
@@ -353,7 +350,7 @@ public class GameManager : MonoBehaviour
         next?.Invoke();
     }
 
-    // ── Panel visibility helper ─────────────────────────────────────────
+    // Panel visibility helper
     void ShowOnly(GameObject panel)
     {
         SetActive(StartPanel, panel);
@@ -363,14 +360,17 @@ public class GameManager : MonoBehaviour
         SetActive(ShopPanel, panel);
         SetActive(VictoryPanel, panel);
         SetActive(HintPanel, panel);
+
+        Time.timeScale = (panel == HUDPanel) ? 1f : 0f;
+        if (ScreenBackgroundImage)
+        {
+            ScreenBackgroundImage.enabled = (panel != HUDPanel);
+        }
     }
 
     static void SetActive(GameObject go, GameObject target) => go?.SetActive(go == target);
 }
 
-// Simple data container for the educational hint screen (point 8).
-// Create an array of these on the GameManager and fill each with a
-// title, a short fact, and an illustrative sprite.
 [Serializable]
 public class ImmuneFact
 {

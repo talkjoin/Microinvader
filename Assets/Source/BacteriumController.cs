@@ -1,6 +1,3 @@
-// Player bacterium movement, dash, shooting, and health.
-
-
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -54,7 +51,6 @@ public class BacteriumController : MonoBehaviour
     public bool IsAlive => _health > 0;
 
     // Exposed so the HUD can read the starting values right after spawn
-    // (OnHealthChanged/OnShieldChanged only fire on *change*, not on subscribe).
     public int CurrentHealth => _health;
     public int CurrentShield => _shield;
 
@@ -170,8 +166,7 @@ public class BacteriumController : MonoBehaviour
         StartCoroutine(IFrameRoutine());
     }
 
-    // Used by GameManager's Assist Mode regen tick (and available for any
-    // future healing pickup/mutation).
+    // Used by GameManager's Assist Mode regen tick
     public void Heal(int amount)
     {
         if (!IsAlive || amount <= 0) return;

@@ -1,6 +1,3 @@
-// ToxinProjectile.cs
-// fired by BacteriumController. Travels straight, deals damage on enemy hit.
-
 using UnityEngine;
 
 public class ToxinProjectile : MonoBehaviour
@@ -21,8 +18,7 @@ public class ToxinProjectile : MonoBehaviour
         _damageMult = damageMult;
         _start      = transform.position;
         _launched   = true;
-        //float angle = Mathf.Atan2(_dir.y, _dir.x) * Mathf.Rad2Deg;
-        //transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
     }
 
     void Update()

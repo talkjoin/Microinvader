@@ -1,6 +1,3 @@
-// call Generate(seed) to get a bool[,] tile grid.
-// true = floor, false = wall.
-
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -54,7 +51,7 @@ public class BSPDungeonGenerator
         return _tiles;
     }
 
-    // ── BSP ──────────────────────────────────────────────────────────────
+    // BSP
     void SplitNode(BSPNode node, int depth)
     {
         if (depth >= _maxDepth) return;
@@ -99,7 +96,7 @@ public class BSPDungeonGenerator
         return Random.value > 0.5f;
     }
 
-    // ── Room placement ────────────────────────────────────────────────────
+    // Room placement
     void PlaceRooms(BSPNode node)
     {
         if (node == null) return;
@@ -131,7 +128,7 @@ public class BSPDungeonGenerator
         }
     }
 
-    // ── Corridors ─────────────────────────────────────────────────────────
+    // Corridors
     void ConnectNode(BSPNode node)
     {
         if (node == null || node.IsLeaf) return;
@@ -173,7 +170,7 @@ public class BSPDungeonGenerator
             for (int w = 0; w < _corridorWidth; w++) SetTile(x + w, y, true);
     }
 
-    // ── Cellular automata ─────────────────────────────────────────────────
+    // Cellular automata
     void SmoothWalls()
     {
         var next = new bool[MapWidth, MapHeight];
@@ -205,7 +202,7 @@ public class BSPDungeonGenerator
         if (x >= 0 && x < MapWidth && y >= 0 && y < MapHeight) _tiles[x,y] = v;
     }
 
-    // ── Internal BSP node ─────────────────────────────────────────────────
+    // Internal BSP node
     class BSPNode
     {
         public RectInt  Bounds;

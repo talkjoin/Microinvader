@@ -1,5 +1,3 @@
-// projectile fired by AntibodyAI.
-
 using UnityEngine;
 
 public class AntibodyProjectile : MonoBehaviour

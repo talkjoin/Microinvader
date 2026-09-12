@@ -48,6 +48,21 @@ public abstract class EnemyBaseAI : MonoBehaviour, IEnemyAI
         _tiles = tiles; _mapW = mapWidth; _mapH = mapHeight;
     }
 
+    // Explicitly assigns the player reference. Called by DungeonManager right
+    // after spawning each enemy. This matters because relying solely on
+    // FindGameObjectWithTag("Player") in Awake() is unreliable across floor
+    // transitions: Destroy() on the previous floor's player is deferred to
+    // end-of-frame, so while this floor's enemies are spawning, both the old
+    // (pending-destroy) and new player can briefly be tagged "Player" at the
+    // same time, and which one a tag search returns is undefined. That was
+    // causing enemies from the second biome onward to lock onto the stale
+    // player position from the previous floor and path toward a spot that
+    // doesn't correspond to anything in the new layout.
+    public void SetPlayer(Transform player)
+    {
+        if (player != null) Player = player;
+    }
+
     // ── Lifecycle ─────────────────────────────────────────────────────────
     protected virtual void Awake()
     {

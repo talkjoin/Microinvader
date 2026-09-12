@@ -30,7 +30,7 @@ public class MutationCardUI : MonoBehaviour
         if (CostText != null) CostText.text = free ? "FREE" : cost.ToString();
 
         if (ActionButtonLabel != null)
-            ActionButtonLabel.text = free ? "Select" : (canAfford ? "Purchase" : "Not enough points");
+            ActionButtonLabel.text = free ? "Select" : (canAfford ? "Buy" : "Needs Points");
 
         if (ActionButton != null)
         {

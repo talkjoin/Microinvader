@@ -131,14 +131,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96f17825ec01bf48b9bfc10e363ba8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  MaxHealth: 3
+  MaxHealth: 4
   SR: {fileID: 0}
   HitColor: {r: 1, g: 0, b: 0, a: 1}
   FlashTime: 0.1
-  DeathVFX: {fileID: 0}
+  DeathVFX: {fileID: 2643024981091904549, guid: f2e38d8fcebc8a144b967391596a923e, type: 3}
   DeathDelay: 0.4
   DropPrefab: {fileID: 0}
   DropChance: 0.2
+  MutationPointReward: 3
 --- !u!50 &8974145446543841378
 Rigidbody2D:
   serializedVersion: 5
@@ -216,13 +217,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AntibodyAI
   DetectionRadius: 6
   LoseAggroRadius: 10
-  PatrolSpeed: 1.5
-  ChaseSpeed: 3.5
-  AttackRange: 1.2
-  AttackCooldown: 1.5
+  PatrolSpeed: 3
+  ChaseSpeed: 4
+  AttackRange: 4
+  AttackCooldown: 1
   AttackDamage: 1
   PathRefreshRate: 0.4
   ProjectilePrefab: {fileID: 8434501206355493906, guid: 39620a43df4bacf4695ee4021bc47565, type: 3}
-  BurstCount: 3
+  BurstCount: 4
   BurstInterval: 0.15
   SpreadAngle: 10

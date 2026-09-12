@@ -1,5 +1,3 @@
-// slow melee attacker. Area slam with knockback.
-
 using UnityEngine;
 
 public class MacrophageAI : EnemyBaseAI
