@@ -14,13 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MutationDefinition
   MutationId: 
   DisplayName: Biofilm -Gold
-  Description: 'Over produce biofilm in order to form a glue like shield on its surface.
-    Incrase defnese by 5
-
-'
+  Description: "Over produce biofilm in order to form a glue like shield on its surface.
+    Fully restore health and incrase health by 20%\n "
   Icon: {fileID: 21300000, guid: 618d44119f6635144b198807afaead47, type: 3}
   SourceBiome: 0
   SpeedMultiplier: 1
   DamageMultiplier: 1
-  BonusShield: 5
-  Cost: 30
+  HealthMultiplier: 1.2
+  Cost: 50

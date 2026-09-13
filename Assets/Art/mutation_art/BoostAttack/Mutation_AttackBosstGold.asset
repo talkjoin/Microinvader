@@ -15,10 +15,10 @@ MonoBehaviour:
   MutationId: 
   DisplayName: EnzymeGenes - Gold
   Description: Improved enzymes potency to boost the break down human tissue. Increase
-    ttack by 50%
+    ttack by 20%
   Icon: {fileID: 21300000, guid: 8f91bebea9180554dba1e19b0cc5350f, type: 3}
   SourceBiome: 1
   SpeedMultiplier: 1
-  DamageMultiplier: 1.5
-  BonusShield: 0
-  Cost: 30
+  DamageMultiplier: 1.2
+  HealthMultiplier: 1
+  Cost: 50

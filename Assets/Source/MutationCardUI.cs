@@ -1,10 +1,3 @@
-// MutationCardUI.cs
-// One mutation option card. GameManager instantiates one of these per
-// choice on both the free-mutation-pick screen (after Continue) and the
-// portal shop screen. Build a prefab with these fields wired up: an
-// icon Image, name/description TMP_Text fields, a cost TMP_Text, and a
-// Button with its own label text.
-
 using System;
 using UnityEngine;
 using UnityEngine.UI;

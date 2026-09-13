@@ -18,6 +18,7 @@ public class BSPDungeonGenerator
     public IReadOnlyList<RectInt> Rooms => _rooms;
     public bool[,] Tiles => _tiles;
 
+
     public BSPDungeonGenerator(
         int mapWidth      = 80,
         int mapHeight     = 60,

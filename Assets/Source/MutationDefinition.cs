@@ -1,4 +1,3 @@
-// ScriptableObject MicroInvader ->Mutation Definition
 
 using UnityEngine;
 
@@ -14,7 +13,7 @@ public class MutationDefinition : ScriptableObject
 
     [Min(0.1f)] public float SpeedMultiplier  = 1f;
     [Min(0.1f)] public float DamageMultiplier = 1f;
-    [Min(0)]    public int   BonusShield      = 0;
+    [Min(0.1f)] public float HealthMultiplier = 1f;
 
     [Header("Shop")]
     [Tooltip("Mutation points required to purchase this at the portal shop.")]

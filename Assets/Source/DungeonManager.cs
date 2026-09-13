@@ -1,5 +1,3 @@
-// attach to a GameObject with Grid.
-
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,7 +37,7 @@ public class DungeonManager : MonoBehaviour
         // Clear anything left over from the previous floor before building the new one.
         ClearSpawned();
 
-        // step1 : generate
+        
         var gen = new BSPDungeonGenerator(
             MapWidth, MapHeight, MinRoomSize, MaxDepth,
             corridorWidth: 2, caIterations: 3, caThreshold: 4);
@@ -48,18 +46,18 @@ public class DungeonManager : MonoBehaviour
 
         if (rooms.Count == 0) { Debug.LogError("No rooms generated!"); return; }
 
-        // step2 : render
+        
         if (Renderer != null) Renderer.Render(Tiles, CurrentBiome);
 
-        // step 3: spawn player in first room
+        
         SpawnRoom = rooms[0];
         SpawnPlayer(SpawnRoom, RoomCenter(SpawnRoom));
 
-        // step 4 : populate remaining rooms
+        
         for (int i = 1; i < rooms.Count; i++)
             PopulateRoom(rooms[i], i);
 
-        // step 5 : exit portal in last room
+        
         if (ExitPortalPrefab != null)
         {
             var portalGo = Instantiate(ExitPortalPrefab, RoomCenter(rooms[rooms.Count - 1]), Quaternion.identity);
@@ -93,7 +91,6 @@ public class DungeonManager : MonoBehaviour
             var go = Instantiate(PlayerPrefab, pos, Quaternion.identity);
             Player = go.GetComponent<BacteriumController>();
 
-            // Auto-assign camera target
             var cam = Camera.main.GetComponent<CameraFollow>();
             if (cam != null)
             {
@@ -137,9 +134,7 @@ public class DungeonManager : MonoBehaviour
 
         if (total <= 0f)
         {
-            // Nothing matches this biome/depth combo - fall back to the first
-            // config, so at least something spawns, but flag it since it likely
-            // means a biome is missing entries in EnemySpawnConfigs.
+            
             Debug.LogWarning($"No EnemySpawnConfig matches biome {CurrentBiome} at floor {FloorDepth}; falling back to EnemySpawnConfigs[0].");
             return EnemySpawnConfigs[0];
         }

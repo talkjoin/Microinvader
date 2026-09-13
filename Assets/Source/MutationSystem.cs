@@ -21,14 +21,14 @@ public class MutationSystem : MonoBehaviour
         Load();
     }
 
-    // Call at end of a floor to show the player three mutation choices.
+    
     public void OfferMutations(BiomeType biome)
     {
         var pool = FilterByBiome(biome);
         OnChoicesOffered?.Invoke(Pick(pool, 3));
     }
 
-    // Call when the player picks a card from the UI.
+    
     public void SelectMutation(MutationDefinition m)
     {
         if (!_active.Contains(m)) _active.Add(m);
@@ -36,22 +36,22 @@ public class MutationSystem : MonoBehaviour
         OnSelected?.Invoke(m);
     }
 
-    // Call at run start to apply stacked mutations to the player.
+    
     public void ApplyToPlayer(BacteriumController player)
     {
-        float sp = 1f, dm = 1f; int sh = 0;
-        foreach (var m in _active) { sp *= m.SpeedMultiplier; dm *= m.DamageMultiplier; sh += m.BonusShield; }
-        player.ApplyMutations(sp, dm, sh);
+        float sp = 1f, dm = 1f, hm = 1f;
+        foreach (var m in _active) { sp *= m.SpeedMultiplier; dm *= m.DamageMultiplier; hm *= m.HealthMultiplier; }
+        player.ApplyMutations(sp, dm, hm);
     }
 
     public void ResetAll() { _active.Clear(); PlayerPrefs.DeleteKey("MI_Mutations"); }
 
-    // Read-only view of everything currently unlocked.
+    
     public IReadOnlyList<MutationDefinition> ActiveMutations => _active;
 
     public bool IsActive(MutationDefinition m) => m != null && _active.Contains(m);
 
-    // Every mutation the player doesn't already own - used by the portal shop.
+    
     public List<MutationDefinition> GetPurchasableMutations()
     {
         var list = new List<MutationDefinition>();
@@ -60,7 +60,7 @@ public class MutationSystem : MonoBehaviour
         return list;
     }
 
-    // 3 random not-yet-owned mutations, offered for free after a death-continue.
+    
     public MutationDefinition[] GetRandomFreeChoices(int n) => Pick(GetPurchasableMutations().ToArray(), n);
 
     MutationDefinition[] FilterByBiome(BiomeType b)

@@ -1,7 +1,3 @@
-// NeutrophilAI.cs
-// Fast rush attacker. Charges at the player for contact damage.
-// Attach to Neutrophil prefab alongside EnemyHealth.
-
 using System.Collections;
 using UnityEngine;
 

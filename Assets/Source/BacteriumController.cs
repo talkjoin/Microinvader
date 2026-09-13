@@ -1,3 +1,6 @@
+// Player bacterium movement, dash, shooting, and health.
+
+
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -21,8 +24,8 @@ public class BacteriumController : MonoBehaviour
     public float      ShotCooldown = 0.35f;
 
     [Header("Health")]
-    public int   MaxHealth  = 5;
-    public int   MaxShield  = 3;
+    [Tooltip("Starting health cap before any mutations. MaxHealth grows from this via health-multiplier mutations.")]
+    public int   BaseMaxHealth = 5;
     public float IFrameTime = 0.6f;
 
     [Header("Hit Flash")]
@@ -36,7 +39,8 @@ public class BacteriumController : MonoBehaviour
     Vector2     _smoothVel;
     Color       _orig;
 
-    int   _health, _shield;
+    int   _health;
+    int   _maxHealth;
     bool  _dashing, _invincible;
     float _dashTimer, _shotTimer;
 
@@ -45,21 +49,21 @@ public class BacteriumController : MonoBehaviour
     float _damageMult = 1f;
 
     public event System.Action<int, int> OnHealthChanged;
-    public event System.Action<int, int> OnShieldChanged;
     public event System.Action           OnDied;
 
     public bool IsAlive => _health > 0;
 
     // Exposed so the HUD can read the starting values right after spawn
+    // (OnHealthChanged only fires on *change*, not on subscribe).
     public int CurrentHealth => _health;
-    public int CurrentShield => _shield;
+    public int MaxHealth => _maxHealth;
 
     void Awake()
     {
-        _rb     = GetComponent<Rigidbody2D>();
-        _anim   = GetComponent<Animator>();
-        _health = MaxHealth;
-        _shield = MaxShield;
+        _rb        = GetComponent<Rigidbody2D>();
+        _anim      = GetComponent<Animator>();
+        _maxHealth = BaseMaxHealth;
+        _health    = _maxHealth;
         if (SR == null) SR = GetComponent<SpriteRenderer>();
         if (SR != null) _orig = SR.color;
     }
@@ -87,6 +91,20 @@ public class BacteriumController : MonoBehaviour
     public void OnShootUp(InputValue v) { if (v.isPressed) TryShoot(transform.up); }
 
     public void OnShootDown(InputValue v) { if (v.isPressed) TryShoot(-transform.up); }
+
+    [Header("Gamepad Aim")]
+    [Tooltip("Stick must be pushed at least this far from center for OnFire to register a direction.")]
+    [Range(0.05f, 0.9f)] public float AimDeadzone = 0.25f;
+
+    Vector2 _aimInput;
+    public void OnAim(InputValue v) => _aimInput = v.Get<Vector2>();
+
+    public void OnFire(InputValue v)
+    {
+        if (!v.isPressed) return;
+        if (_aimInput.sqrMagnitude < AimDeadzone * AimDeadzone) return; // stick too close to center - no clear direction
+        TryShoot(_aimInput.normalized);
+    }
 
 
     // movement stuff
@@ -151,27 +169,29 @@ public class BacteriumController : MonoBehaviour
     public void TakeDamage(int amount)
     {
         if (_invincible || !IsAlive) return;
-        if (_shield > 0)
-        {
-            _shield = Mathf.Max(0, _shield - amount);
-            OnShieldChanged?.Invoke(_shield, MaxShield);
-        }
-        else
-        {
-            _health = Mathf.Max(0, _health - amount);
-            OnHealthChanged?.Invoke(_health, MaxHealth);
-            StartCoroutine(Flash());
-        }
+        _health = Mathf.Max(0, _health - amount);
+        OnHealthChanged?.Invoke(_health, _maxHealth);
+        StartCoroutine(Flash());
         if (_health <= 0) { Die(); return; }
         StartCoroutine(IFrameRoutine());
     }
 
-    // Used by GameManager's Assist Mode regen tick
     public void Heal(int amount)
     {
         if (!IsAlive || amount <= 0) return;
-        _health = Mathf.Min(MaxHealth, _health + amount);
-        OnHealthChanged?.Invoke(_health, MaxHealth);
+        _health = Mathf.Min(_maxHealth, _health + amount);
+        OnHealthChanged?.Invoke(_health, _maxHealth);
+    }
+
+    public void SetHealth(int value)
+    {
+        _health = Mathf.Clamp(value, 0, _maxHealth);
+        OnHealthChanged?.Invoke(_health, _maxHealth);
+    }
+    public void FullHeal()
+    {
+        _health = _maxHealth;
+        OnHealthChanged?.Invoke(_health, _maxHealth);
     }
 
     IEnumerator IFrameRoutine()
@@ -197,12 +217,12 @@ public class BacteriumController : MonoBehaviour
         OnDied?.Invoke();
     }
 
-    // called by MutationSystem at run start
-    public void ApplyMutations(float speedMult, float damageMult, int bonusShield)
+    public void ApplyMutations(float speedMult, float damageMult, float healthMult)
     {
         _speedMult  = speedMult;
         _damageMult = damageMult;
-        MaxShield  += bonusShield;
-        _shield     = MaxShield;
+
+        _maxHealth = Mathf.Max(1, Mathf.RoundToInt(BaseMaxHealth * healthMult));
+        _health    = Mathf.Min(_health, _maxHealth); 
     }
 }

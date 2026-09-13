@@ -1,6 +1,3 @@
-// DungeonRenderer.cs
-// Paints the bool[,] tile grid onto two Unity Tilemaps (floor + wall).
-// Attach to the same GameObject as the Grid component.
 
 using UnityEngine;
 using UnityEngine.Tilemaps;

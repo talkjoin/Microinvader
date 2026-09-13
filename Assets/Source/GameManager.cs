@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    // Biome progression
+    // Biome progression 
     [Header("Biome Order")]
     [Tooltip("The order biomes are played in. The player always starts at index 0.")]
     public BiomeType[] BiomeOrder =
@@ -21,27 +21,29 @@ public class GameManager : MonoBehaviour
     bool _assistMode;
     int  _mutationPoints;
 
-    //References
+    // References 
     [Header("References")]
     public DungeonManager Dungeon;
 
     BacteriumController _player;
 
-    // HUD (shown while playing) 
+    int _persistedHealth = -1;
+
+    //  HUD (shown while playing) 
     [Header("HUD")]
     public GameObject HUDPanel;
     public Slider     HealthBarSlider;
-    public Slider     ShieldBarSlider;
+    public TMP_Text   CurrentBiomeText;
     public TMP_Text   MutationPointsText;
     public Image      ScreenBackgroundImage;
 
-    // Start screen
+    //  Start screen 
     [Header("Start Screen")]
     public GameObject StartPanel;
     public Button     StartNewGameButton;
     public Button     StartAssistModeButton;
 
-    // Death/continue screen
+    // Death / continue screen 
     [Header("Death Screen")]
     public GameObject DeathPanel;
     public Button     ContinueButton;
@@ -50,19 +52,19 @@ public class GameManager : MonoBehaviour
     public GameObject FreeMutationPanel;
     public Transform  FreeMutationCardContainer;
 
-    // Portal shop screen
+    //  Portal shop screen 
     [Header("Portal Shop Screen")]
     public GameObject ShopPanel;
     public Transform  ShopCardContainer;
     public TMP_Text   ShopMutationPointsText;
     public Button     NextStageButton;
 
-    // Victory screen
+    //  Victory screen 
     [Header("Victory Screen")]
     public GameObject VictoryPanel;
     public Button     PlayAgainButton; // optional
 
-    // Hint/education screen
+    // Hint / education screen 
     [Header("Hint Screen")]
     public GameObject   HintPanel;
     public Image        HintImage;
@@ -83,7 +85,7 @@ public class GameManager : MonoBehaviour
     Coroutine _assistRoutine;
     Action    _afterHint;
 
-    // Lifecycle
+
     void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
@@ -111,17 +113,17 @@ public class GameManager : MonoBehaviour
         ShowOnly(StartPanel);
     }
 
-    // Start screen
+    // Start screen 
     void OnStartClicked(bool assistMode)
     {
         _assistMode = assistMode;
         StartFreshRun();
     }
 
-    
     void StartFreshRun()
     {
         MutationSystem.Instance?.ResetAll();
+        _persistedHealth = -1; // next spawn should be a full-health start, not a carryover
         BeginNewRun();
     }
 
@@ -133,10 +135,13 @@ public class GameManager : MonoBehaviour
         ShowHintThen(() => StartBiome(_biomeIndex));
     }
 
-    //Biome / floor flow
+    //  Biome / floor  
     void StartBiome(int index)
     {
         ShowOnly(HUDPanel);
+        InitCurrentBiomeName();
+
+        if (_player != null && _player.IsAlive) _persistedHealth = _player.CurrentHealth;
 
         index = Mathf.Clamp(index, 0, BiomeOrder.Length - 1);
         Dungeon.CurrentBiome = BiomeOrder[index];
@@ -155,7 +160,6 @@ public class GameManager : MonoBehaviour
         if (_player != null)
         {
             _player.OnHealthChanged -= UpdateHealthBar;
-            _player.OnShieldChanged -= UpdateShieldBar;
             _player.OnDied          -= OnPlayerDied;
         }
 
@@ -167,15 +171,17 @@ public class GameManager : MonoBehaviour
         }
 
         _player.OnHealthChanged += UpdateHealthBar;
-        _player.OnShieldChanged += UpdateShieldBar;
         _player.OnDied          += OnPlayerDied;
 
-        // Prime the HUD immediately 
-        UpdateHealthBar(_player.CurrentHealth, _player.MaxHealth);
-        UpdateShieldBar(_player.CurrentShield, _player.MaxShield);
-
-
+        
         if (MutationSystem.Instance != null) MutationSystem.Instance.ApplyToPlayer(_player);
+
+      
+        if (_persistedHealth < 0) _player.FullHeal();
+        else _player.SetHealth(_persistedHealth);
+
+        
+        UpdateHealthBar(_player.CurrentHealth, _player.MaxHealth);
     }
 
     // Assist mode
@@ -200,7 +206,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //HUD updates
+    //  HUD updates 
     void UpdateHealthBar(int current, int max)
     {
         if (HealthBarSlider == null) return;
@@ -208,11 +214,9 @@ public class GameManager : MonoBehaviour
         HealthBarSlider.value    = current;
     }
 
-    void UpdateShieldBar(int current, int max)
+    void InitCurrentBiomeName()
     {
-        if (ShieldBarSlider == null) return;
-        ShieldBarSlider.maxValue = max;
-        ShieldBarSlider.value    = current;
+        if (CurrentBiomeText != null) CurrentBiomeText.text = BiomeOrder[_biomeIndex].ToString();
     }
 
     void AddMutationPoints(int amount)
@@ -227,7 +231,7 @@ public class GameManager : MonoBehaviour
         if (ShopMutationPointsText != null) ShopMutationPointsText.text = $"Mutation Points: {_mutationPoints}";
     }
 
-    // Death / continue
+    // Death / continue flow 
     void OnPlayerDied()
     {
         StopAssistRegen();
@@ -253,12 +257,14 @@ public class GameManager : MonoBehaviour
 
     void OnFreeMutationPicked(MutationDefinition chosen)
     {
+
         MutationSystem.Instance.ResetAll();
         MutationSystem.Instance.SelectMutation(chosen);
+        _persistedHealth = -1; // restarted run begins at full health under the new max
         BeginNewRun();
     }
 
-    // Portal / shop
+    // Portal / shop flow 
     [Tooltip("How many random mutation cards the portal shop offers per visit.")]
     public int ShopOfferCount = 3;
 
@@ -300,6 +306,14 @@ public class GameManager : MonoBehaviour
         _mutationPoints -= def.Cost;
         MutationSystem.Instance.SelectMutation(def);
         _shopOffers.Remove(def); // just this card disappears; the other offers stay put
+
+       
+        if (_player != null)
+        {
+            MutationSystem.Instance.ApplyToPlayer(_player);
+            if (!Mathf.Approximately(def.HealthMultiplier, 1f)) _player.FullHeal();
+        }
+
         RefreshShop();
     }
 
@@ -309,7 +323,7 @@ public class GameManager : MonoBehaviour
         ShowHintThen(() => StartBiome(_biomeIndex));
     }
 
-    // Mutation card list helper (shared by free-pick and shop screens)
+    //Mutation card list helper (shared by free-pick and shop screens)
     void PopulateMutationCards(Transform container, IReadOnlyList<MutationDefinition> options, bool free, Action<MutationDefinition> onPicked)
     {
         if (container == null || MutationCardPrefab == null) return;
@@ -328,7 +342,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //Hint / education screen
+    //  Hint / education screen 
     void ShowHintThen(Action after)
     {
         _afterHint = after;
@@ -350,7 +364,7 @@ public class GameManager : MonoBehaviour
         next?.Invoke();
     }
 
-    // Panel visibility helper
+    //  Panel visibility helper 
     void ShowOnly(GameObject panel)
     {
         SetActive(StartPanel, panel);
@@ -361,7 +375,7 @@ public class GameManager : MonoBehaviour
         SetActive(VictoryPanel, panel);
         SetActive(HintPanel, panel);
 
-       
+   
         Time.timeScale = (panel == HUDPanel) ? 1f : 0f;
         if (ScreenBackgroundImage)
         {
@@ -371,6 +385,7 @@ public class GameManager : MonoBehaviour
 
     static void SetActive(GameObject go, GameObject target) => go?.SetActive(go == target);
 }
+
 
 [Serializable]
 public class ImmuneFact
