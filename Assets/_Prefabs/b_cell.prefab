@@ -215,7 +215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 018670da06738144b8bfb93aca2ee59d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AntibodyAI
-  DetectionRadius: 6
+  DetectionRadius: 8
   LoseAggroRadius: 10
   PatrolSpeed: 3
   ChaseSpeed: 4

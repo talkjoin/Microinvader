@@ -215,7 +215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70544dfcc58413b4b9da7826095df04f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MacrophageAI
-  DetectionRadius: 6
+  DetectionRadius: 8
   LoseAggroRadius: 10
   PatrolSpeed: 1.5
   ChaseSpeed: 2.5

@@ -3,7 +3,7 @@ using UnityEngine;
 public class ToxinProjectile : MonoBehaviour
 {
     public float  Speed      = 15f;
-    public float  MaxRange   = 15f;
+    public float  MaxRange   = 25f;
     public int    BaseDamage = 1;
     public LayerMask EnemyLayer;
     public LayerMask WallLayer;

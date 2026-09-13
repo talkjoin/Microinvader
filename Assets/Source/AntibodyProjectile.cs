@@ -19,6 +19,7 @@ public class AntibodyProjectile : MonoBehaviour
         transform.rotation = Quaternion.AngleAxis(a, Vector3.forward);
     }
 
+
     void Update()
     {
         transform.position += _dir * Speed * Time.deltaTime;

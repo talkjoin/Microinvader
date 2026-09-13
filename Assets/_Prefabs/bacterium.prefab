@@ -164,8 +164,8 @@ MonoBehaviour:
   DashDuration: 0.12
   DashCooldown: 0.8
   ToxinPrefab: {fileID: 8434501206355493906, guid: c05b27ee2706bca43a9b09fe34b7020f, type: 3}
-  ProjectileOrigin: {fileID: 0}
-  ShotCooldown: 0.5
+  ProjectileOrigin: {fileID: 7522866248611353318}
+  ShotCooldown: 0.3
   MaxHealth: 20
   MaxShield: 3
   IFrameTime: 0.6

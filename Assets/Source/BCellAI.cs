@@ -1,8 +1,3 @@
-// BCellAI.cs
-// Ranged burst shooter. Fires AntibodyProjectile in a spread.
-// Attach to Antibody prefab alongside EnemyHealth.
-// Set AttackRange in inspector to ~5 so it keeps distance.
-
 using System.Collections;
 using UnityEngine;
 

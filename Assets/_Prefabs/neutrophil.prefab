@@ -215,7 +215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e7657025cacefc40ae4d5905db243c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NeutrophilAI
-  DetectionRadius: 6
+  DetectionRadius: 8
   LoseAggroRadius: 10
   PatrolSpeed: 1.5
   ChaseSpeed: 3.5

@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 8974145446543841378}
   - component: {fileID: 7133889239917192637}
   - component: {fileID: 1931683794724262667}
-  - component: {fileID: 2142674488185892780}
   - component: {fileID: -8336287152253333820}
   m_Layer: 12
   m_Name: antibody
@@ -182,27 +181,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2142674488185892780
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8434501206355493906}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f96f17825ec01bf48b9bfc10e363ba8d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  MaxHealth: 3
-  SR: {fileID: 0}
-  HitColor: {r: 1, g: 0, b: 0, a: 1}
-  FlashTime: 0.1
-  DeathVFX: {fileID: 0}
-  DeathDelay: 0.4
-  DropPrefab: {fileID: 0}
-  DropChance: 0.2
-  MutationPointReward: 1
 --- !u!114 &-8336287152253333820
 MonoBehaviour:
   m_ObjectHideFlags: 0

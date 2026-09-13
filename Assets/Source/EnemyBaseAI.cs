@@ -1,6 +1,3 @@
-// Abstract FSM base class for all NPC
-// States: Patrol-> Chase-> Attack
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,7 +26,7 @@ public abstract class EnemyBaseAI : MonoBehaviour, IEnemyAI
     [Header("Pathfinding")]
     public float PathRefreshRate = 0.4f;
 
-    // ── Runtime ───────────────────────────────────────────────────────────
+    // Runtime
     protected Rigidbody2D Rb;
     protected Animator    Anim;
     protected Transform   Player;
@@ -42,28 +39,18 @@ public abstract class EnemyBaseAI : MonoBehaviour, IEnemyAI
     Vector2           _patrolTarget;
     float             _patrolWait;
 
-    // ── IEnemyAI ──────────────────────────────────────────────────────────
+    // IEnemyAI
     public void Initialise(bool[,] tiles, int mapWidth, int mapHeight)
     {
         _tiles = tiles; _mapW = mapWidth; _mapH = mapHeight;
     }
 
-    // Explicitly assigns the player reference. Called by DungeonManager right
-    // after spawning each enemy. This matters because relying solely on
-    // FindGameObjectWithTag("Player") in Awake() is unreliable across floor
-    // transitions: Destroy() on the previous floor's player is deferred to
-    // end-of-frame, so while this floor's enemies are spawning, both the old
-    // (pending-destroy) and new player can briefly be tagged "Player" at the
-    // same time, and which one a tag search returns is undefined. That was
-    // causing enemies from the second biome onward to lock onto the stale
-    // player position from the previous floor and path toward a spot that
-    // doesn't correspond to anything in the new layout.
     public void SetPlayer(Transform player)
     {
         if (player != null) Player = player;
     }
 
-    // ── Lifecycle ─────────────────────────────────────────────────────────
+   
     protected virtual void Awake()
     {
         Rb   = GetComponent<Rigidbody2D>();
@@ -82,7 +69,7 @@ public abstract class EnemyBaseAI : MonoBehaviour, IEnemyAI
 
     void FixedUpdate() { Move(); }
 
-    // ── FSM ───────────────────────────────────────────────────────────────
+    // FSM
     void UpdateFSM()
     {
         if (Player == null) return;
@@ -120,7 +107,7 @@ public abstract class EnemyBaseAI : MonoBehaviour, IEnemyAI
         }
     }
 
-    // ── Movement ──────────────────────────────────────────────────────────
+    // movement
     void Move()
     {
         switch (State)
@@ -168,7 +155,7 @@ public abstract class EnemyBaseAI : MonoBehaviour, IEnemyAI
             transform.localScale = new Vector3(Mathf.Sign(dir.x), 1f, 1f);
     }
 
-    // ── Patrol ────────────────────────────────────────────────────────────
+    // patrol
     void UpdatePatrolWander() { /* wander handled in MoveToward timeout */ }
 
     void NewPatrolTarget()
@@ -188,7 +175,7 @@ public abstract class EnemyBaseAI : MonoBehaviour, IEnemyAI
         _patrolWait   = 1f;
     }
 
-    // ── A* ────────────────────────────────────────────────────────────────
+    // A*
     void RefreshPath()
     {
         if (_tiles == null || Player == null) return;
@@ -198,16 +185,16 @@ public abstract class EnemyBaseAI : MonoBehaviour, IEnemyAI
         _pathIdx = 0;
     }
 
-    // ── Abstract attack ───────────────────────────────────────────────────
+    // Abstract attack
     protected abstract void ExecuteAttack();
 
-    // ── Coord helpers (tile size = 1 Unity unit) ──────────────────────────
+    // Coord helpers (tile size = 1 Unity unit)
     Vector2Int WorldToTile(Vector2 w) =>
         new Vector2Int(Mathf.RoundToInt(w.x), Mathf.RoundToInt(w.y));
 
     Vector2 TileToWorld(Vector2Int t) => new Vector2(t.x, t.y);
 
-    // ── Gizmos ────────────────────────────────────────────────────────────
+    // Gizmos
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;  Gizmos.DrawWireSphere(transform.position, DetectionRadius);

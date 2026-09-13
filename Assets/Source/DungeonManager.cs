@@ -30,13 +30,9 @@ public class DungeonManager : MonoBehaviour
     // Read by GameManager right after GenerateDungeon() to bind health/mutation events.
     public BacteriumController Player { get; private set; }
 
-    // Everything instantiated for the current floor (enemies + exit portal) so it
-    // can be torn down before the next floor is generated.
+
     readonly List<GameObject> _spawned = new List<GameObject>();
 
-    // NOTE: dungeon generation is no longer triggered automatically on Start().
-    // GameManager now owns the boot flow (start screen -> hint -> first biome),
-    // and calls GenerateDungeon() explicitly once the player is ready to play.
 
     public void GenerateDungeon(int seed)
     {
@@ -89,9 +85,7 @@ public class DungeonManager : MonoBehaviour
 
     private void SpawnPlayer(RectInt room, Vector3 pos)
     {
-        // Fix: previously this always instantiated a new player without destroying
-        // the old one, so re-entering GenerateDungeon() (e.g. via a portal) would
-        // leave a duplicate bacterium behind. Now the old instance is cleaned up first.
+        
         if (Player != null) Destroy(Player.gameObject);
 
         if (PlayerPrefab != null)
@@ -120,8 +114,7 @@ public class DungeonManager : MonoBehaviour
         var ai = go.GetComponent<IEnemyAI>();
         ai?.Initialise(Tiles, MapWidth, MapHeight);
 
-        // Hand the enemy the current player directly - see the comment on
-        // EnemyBaseAI.SetPlayer for why this can't be left to a tag search.
+        
         var enemyAI = go.GetComponent<EnemyBaseAI>();
         if (enemyAI != null && Player != null) enemyAI.SetPlayer(Player.transform);
     }
