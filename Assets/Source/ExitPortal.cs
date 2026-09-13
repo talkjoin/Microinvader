@@ -1,5 +1,3 @@
-//script fort the protal
-
 using UnityEngine;
 
 public class ExitPortal : MonoBehaviour
@@ -18,13 +16,9 @@ public class ExitPortal : MonoBehaviour
 
         _activated = true;
 
-        // spawn a little burst effect
-        if (ActivatedVFXPrefab != null)
+                if (ActivatedVFXPrefab != null)
             Instantiate(ActivatedVFXPrefab, transform.position, Quaternion.identity);
 
-        // Hand off to GameManager: it owns the biome order/progression now and
-        // will show either the portal shop screen or the victory screen
-        // depending on whether this was the last biome.
         GameManager.Instance?.OnPortalEntered();
     }
 }

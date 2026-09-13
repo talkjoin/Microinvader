@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MutationDefinition
   MutationId: 
   DisplayName: SpeedGenes -Gold
-  Description: Genetic mutation that allow the bacteria to navigate 3X faster.
+  Description: Genetic mutation that allow the bacteria to navigate 50% faster.
   Icon: {fileID: 21300000, guid: 997c5fa52eab1424db2a44044553dd8e, type: 3}
   SourceBiome: 0
-  SpeedMultiplier: 3
+  SpeedMultiplier: 1.5
   DamageMultiplier: 1
   BonusShield: 0
   Cost: 30

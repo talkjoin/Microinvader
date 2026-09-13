@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class ToxinProjectile : MonoBehaviour
 {
-    public float  Speed      = 12f;
-    public float  MaxRange   = 10f;
+    public float  Speed      = 15f;
+    public float  MaxRange   = 15f;
     public int    BaseDamage = 1;
     public LayerMask EnemyLayer;
     public LayerMask WallLayer;
@@ -19,6 +19,13 @@ public class ToxinProjectile : MonoBehaviour
         _start      = transform.position;
         _launched   = true;
 
+        var myCollider = GetComponent<Collider2D>();
+        if (myCollider != null)
+        {
+            var overlaps = Physics2D.OverlapCircleAll(transform.position, 0.15f, WallLayer);
+            foreach (var wallCollider in overlaps)
+                Physics2D.IgnoreCollision(myCollider, wallCollider);
+        }
     }
 
     void Update()

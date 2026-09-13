@@ -15,10 +15,10 @@ MonoBehaviour:
   MutationId: 
   DisplayName: Super Bug
   Description: Incrase immunity against any whiteblook cells with 5+ shield incrase.
-    Incrase speed by 2x. Incrase toxin effectivenss by 3x
+    Incrase speed by 50%. Incrase toxin effectivenss by 50%
   Icon: {fileID: 21300000, guid: 70b2b5956b48df4499829e5635caa43d, type: 3}
   SourceBiome: 0
-  SpeedMultiplier: 3
-  DamageMultiplier: 3
+  SpeedMultiplier: 1.5
+  DamageMultiplier: 1.5
   BonusShield: 5
   Cost: 100

@@ -1,5 +1,3 @@
-// All npc need this one each
-
 using System.Collections;
 using UnityEngine;
 

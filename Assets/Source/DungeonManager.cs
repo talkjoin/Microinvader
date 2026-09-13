@@ -1,3 +1,5 @@
+// attach to a GameObject with Grid.
+
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,16 +27,23 @@ public class DungeonManager : MonoBehaviour
     public RectInt SpawnRoom { get; private set; }
     public bool[,] Tiles     { get; private set; }
 
-        public BacteriumController Player { get; private set; }
+    // Read by GameManager right after GenerateDungeon() to bind health/mutation events.
+    public BacteriumController Player { get; private set; }
 
+    // Everything instantiated for the current floor (enemies + exit portal) so it
+    // can be torn down before the next floor is generated.
     readonly List<GameObject> _spawned = new List<GameObject>();
+
+    // NOTE: dungeon generation is no longer triggered automatically on Start().
+    // GameManager now owns the boot flow (start screen -> hint -> first biome),
+    // and calls GenerateDungeon() explicitly once the player is ready to play.
 
     public void GenerateDungeon(int seed)
     {
         // Clear anything left over from the previous floor before building the new one.
         ClearSpawned();
 
-        // generate
+        // step1 : generate
         var gen = new BSPDungeonGenerator(
             MapWidth, MapHeight, MinRoomSize, MaxDepth,
             corridorWidth: 2, caIterations: 3, caThreshold: 4);
@@ -43,18 +52,18 @@ public class DungeonManager : MonoBehaviour
 
         if (rooms.Count == 0) { Debug.LogError("No rooms generated!"); return; }
 
-        // render
+        // step2 : render
         if (Renderer != null) Renderer.Render(Tiles, CurrentBiome);
 
-        // spawn player in first room
+        // step 3: spawn player in first room
         SpawnRoom = rooms[0];
         SpawnPlayer(SpawnRoom, RoomCenter(SpawnRoom));
 
-        // populate remaining rooms
+        // step 4 : populate remaining rooms
         for (int i = 1; i < rooms.Count; i++)
             PopulateRoom(rooms[i], i);
 
-        // exit portal in last room
+        // step 5 : exit portal in last room
         if (ExitPortalPrefab != null)
         {
             var portalGo = Instantiate(ExitPortalPrefab, RoomCenter(rooms[rooms.Count - 1]), Quaternion.identity);
@@ -80,6 +89,9 @@ public class DungeonManager : MonoBehaviour
 
     private void SpawnPlayer(RectInt room, Vector3 pos)
     {
+        // Fix: previously this always instantiated a new player without destroying
+        // the old one, so re-entering GenerateDungeon() (e.g. via a portal) would
+        // leave a duplicate bacterium behind. Now the old instance is cleaned up first.
         if (Player != null) Destroy(Player.gameObject);
 
         if (PlayerPrefab != null)
@@ -108,7 +120,8 @@ public class DungeonManager : MonoBehaviour
         var ai = go.GetComponent<IEnemyAI>();
         ai?.Initialise(Tiles, MapWidth, MapHeight);
 
-
+        // Hand the enemy the current player directly - see the comment on
+        // EnemyBaseAI.SetPlayer for why this can't be left to a tag search.
         var enemyAI = go.GetComponent<EnemyBaseAI>();
         if (enemyAI != null && Player != null) enemyAI.SetPlayer(Player.transform);
     }
@@ -131,7 +144,9 @@ public class DungeonManager : MonoBehaviour
 
         if (total <= 0f)
         {
-
+            // Nothing matches this biome/depth combo - fall back to the first
+            // config, so at least something spawns, but flag it since it likely
+            // means a biome is missing entries in EnemySpawnConfigs.
             Debug.LogWarning($"No EnemySpawnConfig matches biome {CurrentBiome} at floor {FloorDepth}; falling back to EnemySpawnConfigs[0].");
             return EnemySpawnConfigs[0];
         }

@@ -15,10 +15,10 @@ MonoBehaviour:
   MutationId: 
   DisplayName: EnzymeGenes - SIlver
   Description: Improved enzymes potency to boost the break down human tissue. Increase
-    ttack by 1.5x
+    ttack by 30%
   Icon: {fileID: 21300000, guid: e3d239230529a7c4fa0bc0bfd71c63fe, type: 3}
   SourceBiome: 1
   SpeedMultiplier: 1
-  DamageMultiplier: 1.5
+  DamageMultiplier: 1.3
   BonusShield: 0
   Cost: 20

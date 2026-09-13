@@ -19,6 +19,13 @@ public static class AStarPathfinder
     {
         if (!Walkable(tiles, goal, w, h)) return new List<Vector2Int>();
 
+        if (!Walkable(tiles, start, w, h))
+        {
+            var snapped = FindNearestWalkable(tiles, start, w, h, 3);
+            if (snapped == null) return new List<Vector2Int>();
+            start = snapped.Value;
+        }
+
         var open  = new SortedList<float, Node>(new DupComparer());
         var nodes = new Dictionary<Vector2Int, Node>();
 
@@ -58,6 +65,22 @@ public static class AStarPathfinder
 
     static bool Walkable(bool[,] t, Vector2Int p, int w, int h)
         => p.x >= 0 && p.x < w && p.y >= 0 && p.y < h && t[p.x, p.y];
+
+
+    static Vector2Int? FindNearestWalkable(bool[,] tiles, Vector2Int origin, int w, int h, int maxRadius)
+    {
+        for (int r = 1; r <= maxRadius; r++)
+        {
+            for (int dx = -r; dx <= r; dx++)
+            for (int dy = -r; dy <= r; dy++)
+            {
+                if (Mathf.Max(Mathf.Abs(dx), Mathf.Abs(dy)) != r) continue; // only this ring's edge
+                var p = origin + new Vector2Int(dx, dy);
+                if (Walkable(tiles, p, w, h)) return p;
+            }
+        }
+        return null;
+    }
 
     static float H(Vector2Int a, Vector2Int b)
     {

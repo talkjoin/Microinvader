@@ -1,5 +1,3 @@
-// smoothly tracks the player within dungeon
-
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour

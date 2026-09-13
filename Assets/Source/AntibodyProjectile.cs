@@ -5,6 +5,7 @@ public class AntibodyProjectile : MonoBehaviour
     public float    Speed    = 7f;
     public float    MaxRange = 8f;
     public LayerMask PlayerLayer;
+    public LayerMask WallLayer;
 
     Vector3 _dir, _start;
     int     _damage;
@@ -27,6 +28,12 @@ public class AntibodyProjectile : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        if (((1 << other.gameObject.layer) & WallLayer) != 0)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         if (((1 << other.gameObject.layer) & PlayerLayer) == 0) return;
         other.GetComponent<BacteriumController>()?.TakeDamage(_damage);
         Destroy(gameObject);
